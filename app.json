@@ -8,9 +8,11 @@
     "scheme": "ugamarketplace",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/images/icon.png",
+      "bundleIdentifier": "com.uga-marketplace.app"
     },
     "android": {
+      "package": "com.uga_marketplace.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -28,13 +30,20 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#BA0C2F",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 160,
           "android": {
             "image": "./assets/images/splash-icon.png",
-            "imageWidth": 76
+            "imageWidth": 160
+          },
+          "ios": {
+            "image": "./assets/images/splash-icon.png",
+            "imageWidth": 160
           }
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

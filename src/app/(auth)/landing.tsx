@@ -1,0 +1,100 @@
+import { googleSignIn } from "@/api/endpoints/auth";
+import { ThemedText } from "@/components/themed-text";
+import { globalStyles } from "@/constants/global-styles";
+import { TextVariants } from "@/constants/typography";
+import { useAppContext } from "@/context/app-context";
+import { useGoogleAuth } from "@/hooks/use-google-auth";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Button, Icon, Surface } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+export default function LandingScreen() {
+    const router = useRouter();
+    const { setUser } = useAppContext();
+    const { request, response, promptAsync } = useGoogleAuth();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (response?.type === "success") {
+            const idToken = response.params.id_token;
+            handleBackendAuth(idToken);
+        }
+    }, [response]);
+
+    const handleBackendAuth = async (idToken: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const user = await googleSignIn(idToken);
+            setUser(user);
+            router.replace("/(protected)");
+        } catch (err) {
+            const message =
+                err instanceof Error ? err.message : "Authentication failed";
+            setError(message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const signInPressed = async () => {
+        await promptAsync();
+    };
+
+    const signUpPressed = () => {
+        router.push("./sign-up");
+    };
+
+    return (
+        <Surface style={[globalStyles.container]} elevation={0}>
+            <SafeAreaView style={globalStyles.safeAreaExtra}>
+                <Icon source="storefront" size={128} />
+                <ThemedText
+                    variant={TextVariants.heading_md}
+                    style={{ paddingBottom: 32 }}
+                >
+                    Marketplace
+                </ThemedText>
+
+                {error && (
+                    <ThemedText
+                        variant={TextVariants.label_sm}
+                        style={{ color: "red", paddingBottom: 8 }}
+                    >
+                        {error}
+                    </ThemedText>
+                )}
+
+                {loading ? (
+                    <ActivityIndicator animating size="large" />
+                ) : (
+                    <>
+                        <Button
+                            style={globalStyles.landingPageButtons}
+                            icon="login"
+                            mode="contained"
+                            disabled={!request}
+                            onPress={signInPressed}
+                        >
+                            Sign In
+                        </Button>
+                        <Button
+                            style={globalStyles.landingPageButtons}
+                            icon="coffee"
+                            mode="contained"
+                            onPress={signUpPressed}
+                        >
+                            Sign Up
+                        </Button>
+                    </>
+                )}
+
+                <ThemedText variant={TextVariants.label_sm}>
+                    Using UGA email of course...
+                </ThemedText>
+            </SafeAreaView>
+        </Surface>
+    );
+}
