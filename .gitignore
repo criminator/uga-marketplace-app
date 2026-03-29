@@ -2,7 +2,7 @@
 
 # dependencies
 node_modules/
-crash.log
+
 # Expo
 .expo/
 .vscode/
@@ -45,3 +45,4 @@ app-example
 
 # Misc
 error.log
+crash.log
