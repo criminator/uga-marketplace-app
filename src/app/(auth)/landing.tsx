@@ -41,7 +41,7 @@ export default function LandingScreen() {
             }
             const user = await googleSignIn(idToken);
             setUser(user);
-            router.replace("/(protected)");
+            router.replace("/(protected)/(tabs)");
         } catch (err: any) {
             if (err?.code === statusCodes.SIGN_IN_CANCELLED) {
                 // user cancelled, do nothing

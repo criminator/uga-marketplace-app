@@ -113,6 +113,11 @@ export default function TabsLayout() {
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: colors.primary,
+                    tabBarInactiveTintColor: colors.onSurfaceVariant,
+                    tabBarStyle: {
+                        backgroundColor: colors.elevation.level2,
+                        borderTopColor: colors.outlineVariant,
+                    },
                     header: () => (
                         <Appbar.Header>
                             <Appbar.Action icon="menu" onPress={openDrawer} />
@@ -234,7 +239,9 @@ export default function TabsLayout() {
                                     }
                                 />
                             </Drawer.Section>
-                            <Surface elevation={0} style={{ flex: 1 }} />
+                            <Surface elevation={0} style={{ flex: 1 }}>
+                                <> </>
+                            </Surface>
                             <Drawer.Section showDivider={false}>
                                 <Drawer.Item
                                     label="Sign Out"
@@ -246,7 +253,7 @@ export default function TabsLayout() {
                     </Surface>
                 </Animated.View>
 
-                {/* Create post modal backdrop */}
+                {/* `Create post` modal backdrop */}
                 <Animated.View
                     pointerEvents={modalVisible ? "auto" : "none"}
                     style={[
@@ -297,7 +304,7 @@ export default function TabsLayout() {
                             Create Post
                         </ThemedText>
                         <ThemedText variant={TextVariants.label_sm}>
-                            This is the Create Post modal — placeholder content
+                            This is the Create Post modal - placeholder content
                         </ThemedText>
                     </Surface>
                 </Animated.View>
