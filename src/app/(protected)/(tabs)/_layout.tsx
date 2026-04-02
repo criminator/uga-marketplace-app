@@ -1,6 +1,5 @@
 import { clearAuthToken } from "@/api/client";
-import { ThemedText } from "@/components/themed-text";
-import { TextVariants } from "@/constants/typography";
+import { CreatePostModal } from "@/components/create-post-modal";
 import { useAppContext } from "@/context/app-context";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { useGoogleAuth } from "@/hooks/use-google-auth";
@@ -13,14 +12,13 @@ import {
     Drawer,
     FAB,
     Icon,
-    IconButton,
     Portal,
     Surface,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const DRAWER_WIDTH = Dimensions.get("window").width * 0.75;
-const MODAL_HEIGHT = 400;
+const MODAL_HEIGHT = Dimensions.get("window").height * 0.88;
 
 export default function TabsLayout() {
     const router = useRouter();
@@ -144,6 +142,19 @@ export default function TabsLayout() {
                     }}
                 />
                 <Tabs.Screen
+                    name="category"
+                    options={{
+                        title: "Category",
+                        tabBarIcon: ({ color }) => (
+                            <Icon
+                                source="shape-outline"
+                                size={24}
+                                color={color}
+                            />
+                        ),
+                    }}
+                />
+                <Tabs.Screen
                     name="subscribed"
                     options={{
                         title: "Subscribed",
@@ -257,61 +268,12 @@ export default function TabsLayout() {
                     </Surface>
                 </Animated.View>
 
-                {/* `Create post` modal backdrop */}
-                <Animated.View
-                    pointerEvents={modalVisible ? "auto" : "none"}
-                    style={[
-                        StyleSheet.absoluteFill,
-                        {
-                            backgroundColor: "rgba(0,0,0,0.5)",
-                            opacity: modalBackdropOpacity,
-                        },
-                    ]}
-                >
-                    <Pressable
-                        style={StyleSheet.absoluteFill}
-                        onPress={closeModal}
-                    />
-                </Animated.View>
-
-                {/* Create post modal */}
-                <Animated.View
-                    pointerEvents={modalVisible ? "auto" : "none"}
-                    style={{
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: MODAL_HEIGHT,
-                        transform: [{ translateY }],
-                    }}
-                >
-                    <Surface
-                        style={{
-                            flex: 1,
-                            borderTopLeftRadius: 16,
-                            borderTopRightRadius: 16,
-                            padding: 16,
-                        }}
-                        elevation={4}
-                    >
-                        <Surface
-                            style={{
-                                flexDirection: "row",
-                                justifyContent: "flex-end",
-                            }}
-                            elevation={0}
-                        >
-                            <IconButton icon="close" onPress={closeModal} />
-                        </Surface>
-                        <ThemedText variant={TextVariants.subtitle_md}>
-                            Create Post
-                        </ThemedText>
-                        <ThemedText variant={TextVariants.label_sm}>
-                            This is the Create Post modal - placeholder content
-                        </ThemedText>
-                    </Surface>
-                </Animated.View>
+                <CreatePostModal
+                    visible={modalVisible}
+                    translateY={translateY}
+                    backdropOpacity={modalBackdropOpacity}
+                    onClose={closeModal}
+                />
             </Portal>
         </>
     );
