@@ -10,8 +10,8 @@ import { ThemedText } from "@/components/themed-text";
 import { TextVariants } from "@/constants/typography";
 import { useAppContext } from "@/context/app-context";
 import { useAppTheme } from "@/hooks/use-app-theme";
-import { useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { ActivityIndicator, Snackbar, Surface, Text } from "react-native-paper";
 
@@ -39,9 +39,7 @@ export default function ExploreScreen() {
         }
     }, []);
 
-    useEffect(() => {
-        fetchProducts();
-    }, [fetchProducts]);
+    useFocusEffect(fetchProducts);
 
     const handleToggleWishlist = async (productId: string) => {
         const already = wishlisted.has(productId);

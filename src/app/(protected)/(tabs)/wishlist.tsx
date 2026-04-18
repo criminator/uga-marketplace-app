@@ -5,8 +5,8 @@ import { ThemedText } from "@/components/themed-text";
 import { TextVariants } from "@/constants/typography";
 import { useAppContext } from "@/context/app-context";
 import { useAppTheme } from "@/hooks/use-app-theme";
-import { useRouter } from "expo-router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useRef, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { ActivityIndicator, Icon, Snackbar, Surface, Text, TouchableRipple } from "react-native-paper";
@@ -54,9 +54,7 @@ export default function WishlistScreen() {
         }
     }, [user]);
 
-    useEffect(() => {
-        fetchWishlist();
-    }, [fetchWishlist]);
+    useFocusEffect(fetchWishlist);
 
     const handleRemove = async (productId: string) => {
         swipeableRefs.current.get(productId)?.close();

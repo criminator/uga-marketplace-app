@@ -13,7 +13,7 @@ import { ThemedText } from "@/components/themed-text";
 import { TextVariants } from "@/constants/typography";
 import { useAppContext } from "@/context/app-context";
 import { useAppTheme } from "@/hooks/use-app-theme";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import {
@@ -51,6 +51,12 @@ export default function CategoryScreen() {
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useFocusEffect(
+        useCallback(() => {
+            if (selectedCategory) fetchByCategory(selectedCategory);
+        }, [selectedCategory, fetchByCategory]),
+    );
 
     const fetchByCategory = useCallback(async (category: string, isRefresh = false) => {
         if (isRefresh) setRefreshing(true);
