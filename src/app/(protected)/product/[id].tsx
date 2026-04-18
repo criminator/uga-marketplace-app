@@ -162,6 +162,19 @@ export default function ProductDetailScreen() {
                         </ThemedText>
                     </Surface>
 
+                    {/* Category */}
+                    <Surface elevation={0} style={styles.inlineRow}>
+                        <ThemedText
+                            variant={TextVariants.label_lg}
+                            style={{ color: colors.onSurfaceVariant }}
+                        >
+                            Category:
+                        </ThemedText>
+                        <ThemedText variant={TextVariants.body_md}>
+                            {product.category}
+                        </ThemedText>
+                    </Surface>
+
                     {/* Seller name — clickable link */}
                     <Surface elevation={0} style={styles.inlineRow}>
                         <ThemedText
