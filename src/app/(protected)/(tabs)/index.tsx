@@ -93,7 +93,10 @@ export default function ExploreScreen() {
             params: {
                 id: product.id,
                 productName: product.productName,
-                // Use || as separator since URLs can contain commas
+                price: String(product.price),
+                category: product.category,
+                condition: product.condition,
+                sellerName: product.sellerName,
                 imageUrls: product.productImages.join("||"),
             },
         } as any);

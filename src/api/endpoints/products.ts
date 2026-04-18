@@ -18,11 +18,30 @@ export type ProductSummaryDTO = {
     sellerName: string;
     isAvailable: boolean;
     productImages: string[];
-    dateCreated?: string;
+    dateCreated: string;
+};
+
+export type ProductDTO = {
+    id: string;
+    sellerId: string;
+    sellerName: string;
+    productImages: string[];
+    productName: string;
+    productDescription: string;
+    price: number;
+    dateCreated: string;
+    isAvailable: boolean;
+    category: string;
+    condition: string;
 };
 
 export async function createProduct(data: CreateProductDTO): Promise<void> {
     await apiClient.post("/product", data);
+}
+
+export async function getProductById(id: string): Promise<ProductDTO> {
+    const response = await apiClient.get<ProductDTO>(`/product/${id}`);
+    return response.data;
 }
 
 export async function getAllProducts(): Promise<ProductSummaryDTO[]> {
