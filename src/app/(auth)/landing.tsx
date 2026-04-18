@@ -1,12 +1,12 @@
 import { setAuthToken } from "@/api/client";
 import { signInWithGoogle, verifyGoogleSignUp } from "@/api/endpoints/auth";
-import { supabase } from "@/lib/supabase";
 import { ThemedText } from "@/components/themed-text";
 import { globalStyles } from "@/constants/global-styles";
 import { TextVariants } from "@/constants/typography";
 import { useAppContext } from "@/context/app-context";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { statusCodes, useGoogleAuth } from "@/hooks/use-google-auth";
+import { supabase } from "@/lib/supabase";
 import { saveAuthData } from "@/utils/auth-storage";
 import { setPendingIdToken } from "@/utils/temp-auth-store";
 import { Redirect, useRouter } from "expo-router";
@@ -32,7 +32,7 @@ export default function LandingScreen() {
     if (isAuthenticated) {
         return <Redirect href="/(protected)/(tabs)" />;
     }
-
+    // %%%%%%%%%%%%%%%% VALIDATE UGA EMAIL DOMAIN %%%%%%%%%%%%%%%%
     const isUGAEmail = (email: string) => email.endsWith("@uga.edu");
 
     const signInPressed = async () => {
@@ -43,14 +43,17 @@ export default function LandingScreen() {
 
             if (!isUGAEmail(profile.email)) {
                 await signOut();
-                setError("Access restricted to UGA email addresses (@uga.edu).");
+                setError(
+                    "Access restricted to UGA email addresses (@uga.edu).",
+                );
                 return;
             }
 
-            const { error: supabaseError } = await supabase.auth.signInWithIdToken({
-                provider: "google",
-                token: profile.idToken,
-            });
+            const { error: supabaseError } =
+                await supabase.auth.signInWithIdToken({
+                    provider: "google",
+                    token: profile.idToken,
+                });
             if (supabaseError) throw new Error(supabaseError.message);
 
             try {
@@ -80,7 +83,9 @@ export default function LandingScreen() {
                 // user cancelled, do nothing
             } else {
                 setError(
-                    err instanceof Error ? err.message : "Authentication failed",
+                    err instanceof Error
+                        ? err.message
+                        : "Authentication failed",
                 );
             }
         } finally {
@@ -96,14 +101,17 @@ export default function LandingScreen() {
 
             if (!isUGAEmail(profile.email)) {
                 await signOut();
-                setError("Access restricted to UGA email addresses (@uga.edu).");
+                setError(
+                    "Access restricted to UGA email addresses (@uga.edu).",
+                );
                 return;
             }
 
-            const { error: supabaseError } = await supabase.auth.signInWithIdToken({
-                provider: "google",
-                token: profile.idToken,
-            });
+            const { error: supabaseError } =
+                await supabase.auth.signInWithIdToken({
+                    provider: "google",
+                    token: profile.idToken,
+                });
             if (supabaseError) throw new Error(supabaseError.message);
 
             try {
@@ -135,7 +143,9 @@ export default function LandingScreen() {
                 // user cancelled, do nothing
             } else {
                 setError(
-                    err instanceof Error ? err.message : "Authentication failed",
+                    err instanceof Error
+                        ? err.message
+                        : "Authentication failed",
                 );
             }
         } finally {
