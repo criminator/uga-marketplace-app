@@ -11,6 +11,7 @@ import {
 import { ProductCard } from "@/components/product-card";
 import { ThemedText } from "@/components/themed-text";
 import { TextVariants } from "@/constants/typography";
+import { useAppContext } from "@/context/app-context";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -43,14 +44,13 @@ const CATEGORIES: { label: string; icon: string }[] = [
 export default function CategoryScreen() {
     const { colors } = useAppTheme();
     const router = useRouter();
+    const { wishlisted, setWishlisted, subscribed, setSubscribed } = useAppContext();
 
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [products, setProducts] = useState<ProductSummaryDTO[]>([]);
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [wishlisted, setWishlisted] = useState<Set<string>>(new Set());
-    const [subscribed, setSubscribed] = useState<Set<string>>(new Set());
 
     const fetchByCategory = useCallback(async (category: string, isRefresh = false) => {
         if (isRefresh) setRefreshing(true);

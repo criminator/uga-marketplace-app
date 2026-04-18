@@ -7,6 +7,8 @@ type UserDTO = {
     email: string;
     mobileNumber: string;
     dateJoined: string;
+    wishlist: { id: string }[];
+    subscriptions: { id: string }[];
 };
 
 type AppUser = UserDTO & { token: string };
@@ -15,16 +17,26 @@ type AppContextType = {
     user: AppUser | null;
     setUser: (user: AppUser | null) => void;
     isAuthenticated: boolean;
+    wishlisted: Set<string>;
+    setWishlisted: React.Dispatch<React.SetStateAction<Set<string>>>;
+    subscribed: Set<string>;
+    setSubscribed: React.Dispatch<React.SetStateAction<Set<string>>>;
 };
 
 const AppContext = createContext<AppContextType>({
     user: null,
     setUser: () => {},
     isAuthenticated: false,
+    wishlisted: new Set(),
+    setWishlisted: () => {},
+    subscribed: new Set(),
+    setSubscribed: () => {},
 });
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<AppUser | null>(null);
+    const [wishlisted, setWishlisted] = useState<Set<string>>(new Set());
+    const [subscribed, setSubscribed] = useState<Set<string>>(new Set());
 
     return (
         <AppContext.Provider
@@ -32,6 +44,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
                 user,
                 setUser,
                 isAuthenticated: user !== null,
+                wishlisted,
+                setWishlisted,
+                subscribed,
+                setSubscribed,
             }}
         >
             {children}
