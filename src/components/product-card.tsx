@@ -105,7 +105,9 @@ export function ProductCard({
 
             <Card.Actions style={styles.actions}>
                 <Button
-                    mode={isWishlisted ? "contained-tonal" : "outlined"}
+                    mode={isWishlisted ? "contained" : "outlined"}
+                    buttonColor={isWishlisted ? colors.primary : undefined}
+                    textColor={isWishlisted ? colors.onPrimary : undefined}
                     icon={isWishlisted ? "heart" : "heart-outline"}
                     onPress={onToggleWishlist}
                     compact
@@ -114,7 +116,9 @@ export function ProductCard({
                     {isWishlisted ? "Wishlisted" : "Wishlist"}
                 </Button>
                 <Button
-                    mode={isSubscribed ? "contained-tonal" : "outlined"}
+                    mode={isSubscribed ? "contained" : "outlined"}
+                    buttonColor={isSubscribed ? colors.primary : undefined}
+                    textColor={isSubscribed ? colors.onPrimary : undefined}
                     icon={isSubscribed ? "bell" : "bell-outline"}
                     onPress={onToggleSubscribe}
                     compact
