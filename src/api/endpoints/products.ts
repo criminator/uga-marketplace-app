@@ -5,21 +5,55 @@ type CreateProductDTO = {
     productDescription: string;
     price: number;
     category: string;
+    condition: string;
     productImages: string[];
 };
 
-type ProductDTO = {
+export type ProductSummaryDTO = {
     id: string;
-    title: string;
-    description: string;
+    productName: string;
     price: number;
     category: string;
-    imageUrls: string[];
-    sellerId: string;
-    createdAt: string;
+    condition: string;
+    sellerName: string;
+    isAvailable: boolean;
+    productImages: string[];
+    dateCreated: string;
 };
 
-export async function createProduct(data: CreateProductDTO): Promise<ProductDTO> {
-    const response = await apiClient.post<ProductDTO>("/product", data);
+export type ProductDTO = {
+    id: string;
+    sellerId: string;
+    sellerName: string;
+    productImages: string[];
+    productName: string;
+    productDescription: string;
+    price: number;
+    dateCreated: string;
+    isAvailable: boolean;
+    category: string;
+    condition: string;
+};
+
+export async function createProduct(data: CreateProductDTO): Promise<void> {
+    await apiClient.post("/product", data);
+}
+
+export async function getProductById(id: string): Promise<ProductDTO> {
+    const response = await apiClient.get<ProductDTO>(`/product/${id}`);
+    return response.data;
+}
+
+export async function getAllProducts(): Promise<ProductSummaryDTO[]> {
+    const response = await apiClient.get<ProductSummaryDTO[]>("/product");
+    return response.data;
+}
+
+export async function getProductsByCategory(
+    category: string,
+): Promise<ProductSummaryDTO[]> {
+    const response = await apiClient.get<ProductSummaryDTO[]>(
+        `/product/category/${encodeURIComponent(category)}`,
+    );
     return response.data;
 }

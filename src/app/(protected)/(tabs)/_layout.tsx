@@ -1,11 +1,12 @@
 import { clearAuthToken } from "@/api/client";
+import { getUserById } from "@/api/endpoints/users";
 import { CreatePostModal } from "@/components/create-post-modal";
 import { useAppContext } from "@/context/app-context";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { useGoogleAuth } from "@/hooks/use-google-auth";
 import { clearAuthData } from "@/utils/auth-storage";
 import { Tabs, useRouter } from "expo-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Animated, Dimensions, Pressable, StyleSheet } from "react-native";
 import {
     Appbar,
@@ -22,9 +23,17 @@ const MODAL_HEIGHT = Dimensions.get("window").height * 0.88;
 
 export default function TabsLayout() {
     const router = useRouter();
-    const { setUser } = useAppContext();
+    const { user, setUser, setWishlisted, setSubscribed } = useAppContext();
     const { signOut } = useGoogleAuth();
     const { colors } = useAppTheme();
+
+    useEffect(() => {
+        if (!user) return;
+        getUserById(user.id, user.token).then((data) => {
+            setWishlisted(new Set(data.wishlist.map((p) => p.id)));
+            setSubscribed(new Set(data.subscriptions.map((p) => p.id)));
+        }).catch(() => {});
+    }, [user]);
 
     const [drawerOpen, setDrawerOpen] = useState(false);
     const translateX = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
