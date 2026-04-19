@@ -1,4 +1,5 @@
 import { useAppTheme } from "@/hooks/use-app-theme";
+import * as Location from "expo-location";
 import { useEffect, useRef, useState } from "react";
 import {
     Animated,
@@ -88,6 +89,21 @@ export function MeetupLocationModal({
             ]).start();
         }
     }, [visible]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const handleMyLocation = async () => {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") return;
+        const loc = await Location.getCurrentPositionAsync({});
+        const coords = {
+            latitude: loc.coords.latitude,
+            longitude: loc.coords.longitude,
+        };
+        mapRef.current?.animateToRegion(
+            { ...coords, latitudeDelta: 0.01, longitudeDelta: 0.01 },
+            500,
+        );
+        setMarker(coords);
+    };
 
     const handleConfirm = () => {
         if (!marker) return;
@@ -220,6 +236,18 @@ export function MeetupLocationModal({
                                 }}
                             />
                         </View>
+
+                        {/* My location button */}
+                        <IconButton
+                            icon="crosshairs-gps"
+                            size={24}
+                            iconColor={colors.onSurface}
+                            style={[
+                                styles.myLocationBtn,
+                                { backgroundColor: colors.surface },
+                            ]}
+                            onPress={handleMyLocation}
+                        />
                     </View>
 
                     {/* Confirm button */}
@@ -262,6 +290,13 @@ const styles = StyleSheet.create({
     },
     mapContainer: {
         flex: 1,
+    },
+    myLocationBtn: {
+        position: "absolute",
+        bottom: 16,
+        right: 12,
+        borderRadius: 24,
+        elevation: 3,
     },
     searchContainer: {
         position: "absolute",
