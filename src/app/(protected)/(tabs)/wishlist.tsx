@@ -5,7 +5,7 @@ import { ThemedText } from "@/components/themed-text";
 import { TextVariants } from "@/constants/typography";
 import { useAppContext } from "@/context/app-context";
 import { useAppTheme } from "@/hooks/use-app-theme";
-import { useNavigation, useRouter } from "expo-router";
+import { useFocusEffect, useNavigation, useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
@@ -43,7 +43,7 @@ export default function WishlistScreen() {
     const { colors } = useAppTheme();
     const router = useRouter();
     const navigation = useNavigation();
-    const { user, setWishlisted } = useAppContext();
+    const { user, wishlisted, setWishlisted } = useAppContext();
 
     const [products, setProducts] = useState<ProductSummary[]>([]);
     const [loading, setLoading] = useState(true);
@@ -76,6 +76,12 @@ export default function WishlistScreen() {
         });
         return unsubscribe;
     }, [navigation, fetchWishlist]);
+
+    useFocusEffect(
+        useCallback(() => {
+            setProducts((prev) => prev.filter((p) => wishlisted.has(p.id)));
+        }, [wishlisted]),
+    );
 
     const handleRemove = async (productId: string) => {
         swipeableRefs.current.get(productId)?.close();
